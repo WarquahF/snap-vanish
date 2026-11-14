@@ -61,6 +61,19 @@ Temporary install (survives until browser restart):
 
 ## Notes / limits
 
+- **Prototype, tested offline.** Verified in Chrome-for-Testing and Firefox
+  ESR with a synthetic camera feed (real BodyPix segmentation, real
+  calibration, real vanish/reassemble). The live Zoom web client and Zen
+  Browser specifically have NOT been tested yet - treat first real use as a
+  test run.
+- **Every detected person vanishes.** The effect removes all people the
+  segmenter sees - if a colleague walks into frame, they dissolve too. It
+  does not identify you specifically.
+- For best results sit close (head-and-shoulders framing) with decent,
+  even lighting. Small, distant, or low-contrast people can be partially
+  missed by the segmenter, leaving fragments.
+- Use **Capture clean background** (out of frame) before vanishing for a
+  clean result. Without it, faint seams/smudge can remain where you sat.
 - Temporary add-ons unload when the browser restarts. Reload via
   `about:debugging` after each restart, or get it signed (AMO) for permanent
   install.
