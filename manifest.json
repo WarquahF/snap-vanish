@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Snap Vanish - Thanos dust for video calls",
-  "version": "1.1.0",
-  "description": "Snap your fingers in a browser video call to dissolve into dust. Snap again to reassemble. Works on supported call sites you enable (Zoom, Google Meet, Proton Meet, Teams, Discord, Webex, Jitsi, Whereby).",
+  "version": "1.2.0",
+  "description": "Snap your fingers in a browser video call to dissolve into dust. Snap again to reassemble. Works on supported call sites you enable (Zoom, Google Meet, Proton Meet, WhatsApp Web, Teams, Discord, Webex, Jitsi, Whereby).",
   "browser_specific_settings": {
     "gecko": {
       "id": "snapvanish@warquah.dev",
@@ -18,7 +18,8 @@
     "*://discord.com/*",
     "*://*.webex.com/*",
     "*://meet.jit.si/*",
-    "*://*.whereby.com/*"
+    "*://*.whereby.com/*",
+    "*://web.whatsapp.com/*"
   ],
   "content_scripts": [
     {
@@ -31,7 +32,8 @@
         "*://discord.com/*",
         "*://*.webex.com/*",
         "*://meet.jit.si/*",
-        "*://*.whereby.com/*"
+        "*://*.whereby.com/*",
+        "*://web.whatsapp.com/*"
       ],
       "js": [
         "bridge.js"
@@ -48,7 +50,8 @@
         "*://discord.com/*",
         "*://*.webex.com/*",
         "*://meet.jit.si/*",
-        "*://*.whereby.com/*"
+        "*://*.whereby.com/*",
+        "*://web.whatsapp.com/*"
       ],
       "js": [
         "inject.js"
@@ -75,7 +78,8 @@
         "*://discord.com/*",
         "*://*.webex.com/*",
         "*://meet.jit.si/*",
-        "*://*.whereby.com/*"
+        "*://*.whereby.com/*",
+        "*://web.whatsapp.com/*"
       ]
     }
   ],
