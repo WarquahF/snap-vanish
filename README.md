@@ -20,6 +20,7 @@ toggle per site in the extension popup):
 | Webex | *.webex.com | expected to work - not live-tested |
 | Jitsi Meet | meet.jit.si | expected to work - not live-tested |
 | Whereby | *.whereby.com | expected to work - not live-tested |
+| WhatsApp Web calls | web.whatsapp.com | expected to work - not live-tested; web calling is a gradual WhatsApp rollout, so your account may not have it yet |
 
 "Expected to work" = these sites all take the camera via getUserMedia in page
 context, which is what the extension wraps. The effect pipeline itself is
