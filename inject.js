@@ -308,13 +308,65 @@
     try { this.video.srcObject = null; } catch (e) {}
   };
 
+  // Expand the binary person mask outward by R px (covers hair/edge misses),
+  // then feather the edge with a small box blur so smoothstep gets a soft ramp.
+  function dilateFeatherMask(data, w, h) {
+    var R = Math.max(2, Math.round(Math.min(w, h) * 0.03));
+    var FR = Math.max(1, Math.round(R / 3));
+    var src = data, tmp = new Uint8Array(data.length), out = new Uint8Array(data.length);
+    // horizontal max
+    for (var y = 0; y < h; y++) {
+      var row = y * w;
+      for (var x = 0; x < w; x++) {
+        var m = 0;
+        var x0 = Math.max(0, x - R), x1 = Math.min(w - 1, x + R);
+        for (var xx = x0; xx <= x1; xx++) if (src[row + xx]) { m = 255; break; }
+        tmp[row + x] = m;
+      }
+    }
+    // vertical max
+    for (var x2 = 0; x2 < w; x2++) {
+      for (var y2 = 0; y2 < h; y2++) {
+        var m2 = 0;
+        var y0 = Math.max(0, y2 - R), y1 = Math.min(h - 1, y2 + R);
+        for (var yy = y0; yy <= y1; yy++) if (tmp[yy * w + x2]) { m2 = 255; break; }
+        out[y2 * w + x2] = m2;
+      }
+    }
+    // feather: separable box blur radius FR (two passes over out -> tmp -> out)
+    function blurH(a, b) {
+      for (var y3 = 0; y3 < h; y3++) {
+        var row3 = y3 * w, acc = 0;
+        for (var k = -FR; k <= FR; k++) acc += a[row3 + Math.min(w - 1, Math.max(0, k))];
+        for (var x3 = 0; x3 < w; x3++) {
+          b[row3 + x3] = acc / (2 * FR + 1);
+          var xa = Math.min(w - 1, x3 + FR + 1), xs = Math.max(0, x3 - FR);
+          acc += a[row3 + xa] - a[row3 + xs];
+        }
+      }
+    }
+    function blurV(a, b) {
+      for (var x4 = 0; x4 < w; x4++) {
+        var acc2 = 0;
+        for (var k2 = -FR; k2 <= FR; k2++) acc2 += a[Math.min(h - 1, Math.max(0, k2)) * w + x4];
+        for (var y4 = 0; y4 < h; y4++) {
+          b[y4 * w + x4] = acc2 / (2 * FR + 1);
+          var ya = Math.min(h - 1, y4 + FR + 1), ys = Math.max(0, y4 - FR);
+          acc2 += a[ya * w + x4] - a[ys * w + x4];
+        }
+      }
+    }
+    blurH(out, tmp); blurV(tmp, out);
+    return out;
+  }
+
   Pipeline.prototype.uploadMask = function (seg) {
     var gl = this.gl;
     // bodypix masks are 0/1 bytes; scale to full luminance range once
     if (!seg._scaled) {
       var s = new Uint8Array(seg.data.length);
       for (var i = 0; i < seg.data.length; i++) s[i] = seg.data[i] ? 255 : 0;
-      seg._scaled = s;
+      seg._scaled = dilateFeatherMask(s, seg.width, seg.height);
     }
     gl.bindTexture(gl.TEXTURE_2D, this.texMask);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -538,8 +590,8 @@
     if (mlState !== 'ready') throw new Error('segmentation unavailable');
     var seg = await net.segmentPerson(video, {
       flipHorizontal: false,
-      internalResolution: 0.25,
-      segmentationThreshold: 0.5,
+      internalResolution: 0.5,
+      segmentationThreshold: 0.4,
       maxDetections: 1,
       scoreThreshold: 0.2
     });
