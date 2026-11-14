@@ -18,13 +18,14 @@
 </head>
 <body>
   <h1>Snap Vanish</h1>
-  <div class="sub">Thanos dust for Zoom web</div>
+  <div class="sub">Thanos dust for browser video calls</div>
   <div class="hint" style="margin-top:0">For a real vanish: step out, capture clean bg, step back in.</div>
   <div id="state">...</div>
   <button id="snap">Snap (test)</button>
   <button id="bg" style="margin-top:8px;background:#2a2e3a">Capture clean background</button>
   <div class="hint" id="bgmsg" style="margin-top:6px;color:#ffb454"></div>
   <div class="row"><input type="checkbox" id="enabled" checked><label for="enabled">Effect enabled</label></div>
+  <div class="row"><input type="checkbox" id="site"><label for="site">Enable on <span id="host">this site</span></label></div>
   <div class="hint">Snap your fingers to toggle, or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>.<br><span id="ml"></span></div>
   <script src="popup.js"></script>
 </body>
