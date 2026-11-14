@@ -16,10 +16,31 @@
   document.getElementById('bg').addEventListener('click', function () { send('captureBg'); });
   enabledEl.addEventListener('change', function () { send('setEnabled', enabledEl.checked); });
 
+  // Per-site enable (stored map hostname -> true; default off)
+  var siteEl = document.getElementById('site');
+  var host = null;
+  api.tabs.query({ active: true, currentWindow: true }).then(function (tabs) {
+    try { host = new URL(tabs[0].url).hostname; } catch (e) {}
+    document.getElementById('host').textContent = host || 'this site';
+    if (!host) { siteEl.disabled = true; return; }
+    api.storage.local.get('svSites').then(function (r) {
+      siteEl.checked = !!(((r && r.svSites) || {})[host]);
+    });
+  });
+  siteEl.addEventListener('change', function () {
+    if (!host) return;
+    api.storage.local.get('svSites').then(function (r) {
+      var m = (r && r.svSites) || {};
+      if (siteEl.checked) m[host] = true; else delete m[host];
+      api.storage.local.set({ svSites: m });
+    });
+  });
+
   api.runtime.onMessage.addListener(function (msg) {
     if (!msg || msg.__sv !== 'status') return;
     var d = msg.data;
-    stateEl.textContent = d.state === 'no-camera' ? 'no camera yet' : d.state;
+    if (d.siteEnabled === false) stateEl.textContent = 'site not enabled';
+    else stateEl.textContent = d.state === 'no-camera' ? 'no camera yet' : d.state;
     stateEl.className = d.state;
     enabledEl.checked = !!d.enabled;
     document.getElementById('bgmsg').textContent = d.bgMsg || (d.hasClean ? 'clean background set' : '');
