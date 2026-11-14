@@ -776,7 +776,17 @@
       postStatus();
     }
     if (d.cmd === 'toggle') toggle();
-    else if (d.cmd === 'setEnabled') { enabled = !!d.value; postStatus(); }
+    else if (d.cmd === 'setEnabled') {
+      enabled = !!d.value;
+      // turning the effect off mid-call hard-returns the video to normal now,
+      // instead of only gating future camera requests
+      if (!enabled) {
+        pipelines.forEach(function (pipe) {
+          pipe.state = 'idle'; pipe.hasCapture = false; pipe.p = 0;
+        });
+      }
+      postStatus();
+    }
     else if (d.cmd === 'status') postStatus();
   });
 
