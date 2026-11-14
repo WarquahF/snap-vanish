@@ -1,12 +1,30 @@
-# Snap Vanish - Thanos dust for Zoom
+# Snap Vanish - Thanos dust for video calls
 
-Snap your fingers in a Zoom meeting and you dissolve into dust, live on camera.
-Snap again and the dust flies back and you reassemble. Only you vanish - your
-background stays.
+Snap your fingers in a browser video call and you dissolve into dust, live on
+camera. Snap again and the dust flies back and you reassemble. Only people
+vanish - your background stays.
 
-Works on the **Zoom web client** (join from browser) in **Firefox / Zen Browser**.
-It cannot touch the Zoom desktop app's camera - join the meeting from the
-"Join from your browser" link instead.
+Works in **Firefox / Zen Browser** on supported browser call sites (the desktop
+apps' cameras cannot be touched - always join from the browser).
+
+Supported sites (camera is only ever intercepted on sites YOU enable, one
+toggle per site in the extension popup):
+
+| Site | Host | Status |
+| --- | --- | --- |
+| Zoom web client | *.zoom.us | expected to work - not live-tested |
+| Google Meet | meet.google.com | expected to work - not live-tested |
+| Proton Meet | meet.proton.me | expected to work - not live-tested |
+| Microsoft Teams | teams.microsoft.com, teams.live.com | expected to work - not live-tested |
+| Discord (web) | discord.com | expected to work - not live-tested |
+| Webex | *.webex.com | expected to work - not live-tested |
+| Jitsi Meet | meet.jit.si | expected to work - not live-tested |
+| Whereby | *.whereby.com | expected to work - not live-tested |
+
+"Expected to work" = these sites all take the camera via getUserMedia in page
+context, which is what the extension wraps. The effect pipeline itself is
+tested offline end-to-end (see "Notes / limits"). Only load-test a site
+before relying on it in a real call.
 
 ## Install (Firefox or Zen, Linux)
 
@@ -20,8 +38,20 @@ Temporary install (survives until browser restart):
 2. Open `about:debugging#/runtime/this-firefox` in the address bar.
 3. Click **Load Temporary Add-on...**
 4. Pick any file inside `~/extensions/snap-vanish` (e.g. `manifest.json`).
-5. Join a Zoom meeting from the browser (`https://zoom.us/j/...` -> "Join from
-   your browser"), allow camera + mic.
+5. Open a supported call site (e.g. `https://zoom.us` -> "Join from your
+   browser", `https://meet.google.com`, `https://meet.proton.me`).
+6. Click the Snap Vanish toolbar icon -> tick **Enable on <site>** (one time
+   per site). Until you do, the camera passes through completely untouched.
+7. Join the call, allow camera + mic.
+
+## Updating
+
+```fish
+cd ~/extensions/snap-vanish
+git pull
+```
+Then in the browser: `about:debugging#/runtime/this-firefox` -> Snap Vanish ->
+**Reload**.
 
 ## Use
 
