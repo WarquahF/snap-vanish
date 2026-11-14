@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font: 13px/1.4 -apple-system, "Segoe UI", Roboto, sans-serif; width: 240px; margin: 0; padding: 14px; background: #14161c; color: #e8e9ee; }
+  h1 { font-size: 14px; margin: 0 0 2px; }
+  .sub { color: #9aa0b0; font-size: 11px; margin-bottom: 12px; }
+  #state { font-size: 18px; margin: 10px 0; }
+  #state.vanished { color: #ffb454; }
+  #state.idle { color: #7ee787; }
+  button { width: 100%; padding: 8px; border: 0; border-radius: 6px; background: #4f6ef7; color: #fff; font-size: 13px; cursor: pointer; }
+  button:hover { background: #6280ff; }
+  .row { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: #9aa0b0; font-size: 12px; }
+  .hint { margin-top: 12px; color: #6c7280; font-size: 11px; }
+  kbd { background: #23262f; border-radius: 3px; padding: 1px 5px; font-size: 11px; }
+</style>
+</head>
+<body>
+  <h1>Snap Vanish</h1>
+  <div class="sub">Thanos dust for Zoom web</div>
+  <div class="hint" style="margin-top:0">For a real vanish: step out, capture clean bg, step back in.</div>
+  <div id="state">...</div>
+  <button id="snap">Snap (test)</button>
+  <button id="bg" style="margin-top:8px;background:#2a2e3a">Capture clean background</button>
+  <div class="hint" id="bgmsg" style="margin-top:6px;color:#ffb454"></div>
+  <div class="row"><input type="checkbox" id="enabled" checked><label for="enabled">Effect enabled</label></div>
+  <div class="hint">Snap your fingers to toggle, or press <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>.<br><span id="ml"></span></div>
+  <script src="popup.js"></script>
+</body>
+</html>
