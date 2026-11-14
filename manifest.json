@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Snap Vanish - Thanos dust for Zoom",
-  "version": "1.0.0",
-  "description": "Snap your fingers in a Zoom web meeting to dissolve into dust. Snap again to reassemble. Firefox + Zoom web client only.",
+  "name": "Snap Vanish - Thanos dust for video calls",
+  "version": "1.1.0",
+  "description": "Snap your fingers in a browser video call to dissolve into dust. Snap again to reassemble. Works on supported call sites you enable (Zoom, Google Meet, Proton Meet, Teams, Discord, Webex, Jitsi, Whereby).",
   "browser_specific_settings": {
     "gecko": {
       "id": "snapvanish@warquah.dev",
@@ -10,12 +10,28 @@
     }
   },
   "host_permissions": [
-    "*://*.zoom.us/*"
+    "*://*.zoom.us/*",
+    "*://meet.google.com/*",
+    "*://meet.proton.me/*",
+    "*://teams.microsoft.com/*",
+    "*://teams.live.com/*",
+    "*://discord.com/*",
+    "*://*.webex.com/*",
+    "*://meet.jit.si/*",
+    "*://*.whereby.com/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "*://*.zoom.us/*"
+        "*://*.zoom.us/*",
+        "*://meet.google.com/*",
+        "*://meet.proton.me/*",
+        "*://teams.microsoft.com/*",
+        "*://teams.live.com/*",
+        "*://discord.com/*",
+        "*://*.webex.com/*",
+        "*://meet.jit.si/*",
+        "*://*.whereby.com/*"
       ],
       "js": [
         "bridge.js"
@@ -24,7 +40,15 @@
     },
     {
       "matches": [
-        "*://*.zoom.us/*"
+        "*://*.zoom.us/*",
+        "*://meet.google.com/*",
+        "*://meet.proton.me/*",
+        "*://teams.microsoft.com/*",
+        "*://teams.live.com/*",
+        "*://discord.com/*",
+        "*://*.webex.com/*",
+        "*://meet.jit.si/*",
+        "*://*.whereby.com/*"
       ],
       "js": [
         "inject.js"
@@ -43,7 +67,15 @@
         "group1-shard1of1.bin"
       ],
       "matches": [
-        "*://*.zoom.us/*"
+        "*://*.zoom.us/*",
+        "*://meet.google.com/*",
+        "*://meet.proton.me/*",
+        "*://teams.microsoft.com/*",
+        "*://teams.live.com/*",
+        "*://discord.com/*",
+        "*://*.webex.com/*",
+        "*://meet.jit.si/*",
+        "*://*.whereby.com/*"
       ]
     }
   ],
@@ -54,5 +86,8 @@
   "icons": {
     "48": "icon.svg",
     "96": "icon.svg"
-  }
+  },
+  "permissions": [
+    "storage"
+  ]
 }
