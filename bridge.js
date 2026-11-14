@@ -23,6 +23,19 @@
     }
   }, true);
 
+  // Per-site enable: read the user's enabled-site map and keep the page
+  // script informed. Default is OFF - no camera/mic interception until the
+  // user enables this hostname in the popup.
+  function pushSiteEnabled(map) {
+    window.postMessage({ __sv: 'cmd', cmd: 'siteEnabled', value: !!(map && map[location.hostname]) }, '*');
+  }
+  if (api.storage && api.storage.local) {
+    api.storage.local.get('svSites').then(function (r) { pushSiteEnabled((r && r.svSites) || {}); });
+    api.storage.onChanged.addListener(function (changes, area) {
+      if (area === 'local' && changes.svSites) pushSiteEnabled(changes.svSites.newValue || {});
+    });
+  }
+
   // popup -> page
   api.runtime.onMessage.addListener(function (msg) {
     if (msg && msg.__sv === 'popup') {
