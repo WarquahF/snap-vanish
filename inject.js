@@ -581,6 +581,15 @@
     return { data: data, width: w, height: h };
   }
 
+  // Per-site enable: the camera/mic are only intercepted on call sites the
+  // user explicitly enabled in the popup. ?svenable=1 force-enables (testing).
+  var siteForced = /[?&]svenable=1/.test(location.search);
+  var siteEnabled = siteForced;
+  // The bridge pushes the stored state moments after document_start. Camera
+  // requests wait briefly for that first push so enabled sites are not missed.
+  var siteReadyResolve;
+  var siteReady = new Promise(function (r) { siteReadyResolve = r; });
+  setTimeout(siteReadyResolve, 1500);
   var lastSegCoverage = -1;
   async function segmentNow(video) {
     if (forceMaskMode === 'rect') {
@@ -654,6 +663,7 @@
       __sv: 'status',
       version: VERSION,
       enabled: enabled,
+      siteEnabled: siteEnabled,
       mlState: mlState,
       snapCount: snapCount,
       audio: !!audioCtx,
@@ -716,6 +726,8 @@
     window.__svOrigGUM = orig;
     md.getUserMedia = async function (constraints) {
       if (!enabled || !constraints || !constraints.video) return orig(constraints);
+      await siteReady; // first bridge push (or 1.5s timeout) decides the gate
+      if (!siteEnabled) return orig(constraints);
       var real = await orig(constraints);
       if (!real.getVideoTracks().length) return real;
       try {
@@ -758,6 +770,11 @@
         postStatus();
       })();
     }
+    if (d.cmd === 'siteEnabled') {
+      if (!siteForced) siteEnabled = !!d.value;
+      if (siteReadyResolve) { siteReadyResolve(); siteReadyResolve = null; }
+      postStatus();
+    }
     if (d.cmd === 'toggle') toggle();
     else if (d.cmd === 'setEnabled') { enabled = !!d.value; postStatus(); }
     else if (d.cmd === 'status') postStatus();
@@ -770,7 +787,7 @@
     status: function () {
       var pipe = anyPipeline();
       return {
-        enabled: enabled, mlState: mlState, snapCount: snapCount,
+        enabled: enabled, siteEnabled: siteEnabled, mlState: mlState, snapCount: snapCount,
         state: pipe ? pipe.state : 'no-camera', pipelines: pipelines.size
       };
     },
