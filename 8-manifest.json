@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Snap Vanish - Thanos dust for Zoom",
+  "version": "1.0.0",
+  "description": "Snap your fingers in a Zoom web meeting to dissolve into dust. Snap again to reassemble. Firefox + Zoom web client only.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "snapvanish@warquah.dev",
+      "strict_min_version": "109.0"
+    }
+  },
+  "host_permissions": [
+    "*://*.zoom.us/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.zoom.us/*"
+      ],
+      "js": [
+        "bridge.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "*://*.zoom.us/*"
+      ],
+      "js": [
+        "inject.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "tf.min.js",
+        "body-pix.min.js",
+        "snap-detector.js",
+        "model-stride16.json",
+        "group1-shard1of1.bin"
+      ],
+      "matches": [
+        "*://*.zoom.us/*"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Snap Vanish"
+  },
+  "icons": {
+    "48": "icon.svg",
+    "96": "icon.svg"
+  }
+}
